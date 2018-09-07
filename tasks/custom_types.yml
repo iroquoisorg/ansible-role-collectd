@@ -1,0 +1,11 @@
+- name: Install custom types
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/collectd/{{ item }}"
+  with_items: "{{ collectd_customtypes }}"
+  register: customtypes
+
+- name: Append custom type
+  shell: "cat /usr/share/collectd/{{ item.item }} >> /usr/share/collectd/types.db"
+  when: item.changed == true
+  with_items: "{{ customtypes.results }}"

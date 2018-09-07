@@ -1,0 +1,5 @@
+---
+- name: Install arundeckrun
+  pip:
+    name: arundeckrun
+    state: present

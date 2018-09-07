@@ -1,0 +1,15 @@
+LoadPlugin varnish
+<Plugin "varnish">
+  <Instance>
+    CollectCache       true
+    CollectConnections true
+    CollectBackend     true
+    CollectSHM         true
+    CollectESI         false
+    CollectFetch       true
+    CollectHCB         false
+    CollectSMS         false
+    CollectTotals      false
+    CollectWorkers     false
+  </Instance>
+</Plugin>

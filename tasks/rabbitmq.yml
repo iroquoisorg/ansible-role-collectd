@@ -1,0 +1,33 @@
+- name: Check if custom types are installed
+  stat:
+    path: /usr/share/collectd/types.db.custom
+  register: customcollectdtypes
+
+- name: Download custom types database
+  get_url:
+    url: https://collectd-rabbitmq.readthedocs.io/en/latest/_downloads/types.db.custom
+    dest: /usr/share/collectd/types.db.custom
+  when: customcollectdtypes.stat.exists != true
+
+- name: Install custom types database
+  shell: "cat /usr/share/collectd/types.db.custom >> /usr/share/collectd/types.db"
+  when: customcollectdtypes.stat.exists != true
+
+- name: Install pip
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - python-dev
+    - python-pip
+
+- name: Upgrade pip
+  pip:
+    name: pip
+    state: latest
+
+- name: Install rabbitmq module
+  pip:
+    name: collectd-rabbitmq
+    state: present
+

@@ -1,0 +1,72 @@
+---
+- name: Add collectd repository
+  apt_repository:
+    repo: ppa:collectd/collectd-5.5
+    state: present
+    update_cache: yes
+
+- name: Install collectd
+  apt:
+    package: collectd
+    state: latest
+
+- name: Ensure python script directory exists
+  file:
+    path: /usr/share/collectd/python
+    state: directory
+
+- name: Copy python scripts for varnish
+  copy:
+    src: "{{ item }}"
+    dest: "/usr/share/collectd/python/{{ item }}"
+    owner: root
+    group: root
+    mode: 0644
+  with_items:
+    - varnish_cache.py
+    - rundeck_collect.py
+
+- name: Install meminfo script
+  copy:
+    src: meminfo.sh
+    dest: /usr/local/bin/meminfo.sh
+    mode: 0755
+    owner: root
+    group: root
+
+- name: Configure collectd
+  template:
+    src: collectd.conf.j2
+    dest: /etc/collectd/collectd.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart collectd
+
+- name: Install meminfo config file
+  template:
+    src: mem.conf.j2
+    dest: "/etc/collectd/collectd.conf.d/mem.conf"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart collectd
+
+- name: Install additional config files
+  template:
+    src: "{{ item }}"
+    dest: "/etc/collectd/collectd.conf.d/{{ item | regex_replace('\\.j2', '') }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart collectd
+  with_items: "{{ collectd_configs }}"
+
+- include: rabbitmq.yml
+  when: collectd_rabbitmq == true
+
+- include: rundeck.yml
+  when: collectd_rundeck == true
+
+- include: custom_types.yml
+

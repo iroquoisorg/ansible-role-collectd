@@ -1,0 +1,4 @@
+rundeck_jobs_running         value:GAUGE:0:65535
+rundeck_jobs_enabled         value:GAUGE:0:65535
+rundeck_system_running       value:GAUGE:0:65535
+rundeck_system_threads       value:GAUGE:0:65535

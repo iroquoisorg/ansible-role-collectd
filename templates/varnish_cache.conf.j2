@@ -1,0 +1,18 @@
+# Configure the varnish_cache-collectd-plugin
+
+<LoadPlugin python>
+  Globals true
+</LoadPlugin>
+
+<Plugin python>
+  ModulePath "/usr/share/collectd/python"
+  LogTraces true
+  Interactive false
+  Import "varnish_cache"
+
+  <Module varnish_cache>
+   Varnishstats "/usr/bin/varnishstat"
+   Verbose false
+   Varnishver "4"
+  </Module>
+</Plugin>
