@@ -66,6 +66,7 @@ LoadPlugin  uptime
 #       </Instance>
 #</Plugin>
 
+{% if grafana_ip is defined %}
 <Plugin network>
         Server "{{ grafana_ip }}" "25826"
 #       # client setup:
@@ -96,6 +97,7 @@ LoadPlugin  uptime
 #       # "garbage collection"
 #       CacheFlush 1800
 </Plugin>
+{% endif %}
 
 #<Plugin nginx>
 #       URL "http://localhost/status?auto"
